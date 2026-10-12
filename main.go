@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"os"
 
+	"github.com/gin-gonic/gin"
+	"github.com/glesiosantos/crud_go_mongodb/src/controller/routes"
 	"github.com/joho/godotenv"
 )
 
@@ -15,5 +15,10 @@ func main() {
 		log.Fatal("Error ao carregar as variaveis de ambiente")
 	}
 
-	fmt.Println(os.Getenv("TEST"))
+	router := gin.New()
+
+	routes.InitRoutes(&router.RouterGroup)
+	if err := router.Run(":8080"); err != nil {
+		log.Fatal(err)
+	}
 }
