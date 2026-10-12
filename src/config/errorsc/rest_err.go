@@ -1,4 +1,4 @@
-package errors
+package errorsc
 
 import (
 	"net/http"
