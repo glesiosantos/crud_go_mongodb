@@ -10,7 +10,7 @@ POST http://localhost:8080/createUser
 
 {
     "email": "glesioss@gmail.com",
-    "password": "102030",
+    "password": "Y@s230418",
     "name": "Glêsio Santos da Silva",
     "age": 42
 }
