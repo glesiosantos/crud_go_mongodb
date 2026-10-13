@@ -8,6 +8,7 @@ import (
 	"github.com/glesiosantos/crud_go_mongodb/src/config/validation"
 	"github.com/glesiosantos/crud_go_mongodb/src/controller/dto/request"
 	"github.com/glesiosantos/crud_go_mongodb/src/model"
+	"github.com/glesiosantos/crud_go_mongodb/src/model/services"
 	"go.uber.org/zap"
 )
 
@@ -28,12 +29,14 @@ func CreateUser(c *gin.Context) {
 	}
 
 	domain := model.NewUserDomain(userRequest.Email, userRequest.Password, userRequest.Name, userRequest.Age)
-	if err := domain.CreateUser(); err != nil {
+	service := services.NewUserDomainService()
+
+	if err := service.CreateUser(domain); err != nil {
 		c.JSON(err.Code, err)
 		return
 	}
 
-	logger.Info("User created successfully", zap.String("jouney", "createUser"))
+	logger.Info("User created successfully", zap.String("journey", "createUser"))
 
 	c.JSON(http.StatusCreated, "")
 }

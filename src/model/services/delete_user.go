@@ -1,4 +1,4 @@
-package model
+package services
 
 import (
 	"github.com/glesiosantos/crud_go_mongodb/src/config/errorsc"
@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (ud *userDomain) UpdateUser(id string) *errorsc.RestErr {
-	logger.Info("Init updateUser model", zap.String("journey", "updateUser"))
+func (ud *userDomainService) DeleteUser(id string) *errorsc.RestErr {
+	logger.Info("Init deleteUser model", zap.String("journey", "deleteUser"))
 	return nil
 }

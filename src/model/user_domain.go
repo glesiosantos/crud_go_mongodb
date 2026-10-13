@@ -3,9 +3,16 @@ package model
 import (
 	"crypto/md5"
 	"encoding/hex"
-
-	"github.com/glesiosantos/crud_go_mongodb/src/config/errorsc"
 )
+
+type UserDomainInterface interface {
+	GetEmail() string
+	GetPassword() string
+	GetName() string
+	GetAge() int
+
+	EncryptPassword()
+}
 
 func NewUserDomain(email, password, name string, age int) UserDomainInterface {
 	return &userDomain{email, password, name, age}
@@ -18,16 +25,14 @@ type userDomain struct {
 	age      int
 }
 
+func (ud *userDomain) GetEmail() string    { return ud.email }
+func (ud *userDomain) GetPassword() string { return ud.password }
+func (ud *userDomain) GetName() string     { return ud.name }
+func (ud *userDomain) GetAge() int         { return ud.age }
+
 func (ud *userDomain) EncryptPassword() {
 	hash := md5.New()
 	defer hash.Reset()
 	hash.Write([]byte(ud.password))
 	ud.password = hex.EncodeToString(hash.Sum(nil))
-}
-
-type UserDomainInterface interface {
-	CreateUser() *errorsc.RestErr
-	UpdateUser(string) *errorsc.RestErr
-	FindUser(string) (*userDomain, *errorsc.RestErr)
-	DeleteUser(string) (*userDomain, *errorsc.RestErr)
 }
