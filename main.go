@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +17,9 @@ func main() {
 	logger.Info("About to start user application")
 	err := godotenv.Load()
 
-	database.InitConnection()
+	context := context.Background()
+
+	database.NewMongoDBConnection(context)
 
 	if err != nil {
 		log.Fatal("Error ao carregar as variaveis de ambiente")
