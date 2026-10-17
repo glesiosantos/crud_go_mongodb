@@ -50,8 +50,8 @@ func (ur *userRepository) FindUserById(id string) (model.UserDomainInterface, *e
 	collection := ur.databaseConnection.Collection(collectionName)
 
 	userEntity := &entity.UserEntity{}
-
-	filter := bson.D{{Key: "_id", Value: id}}
+	objectId, _ := bson.ObjectIDFromHex(id)
+	filter := bson.D{{Key: "_id", Value: objectId}}
 
 	err := collection.FindOne(context.Background(), filter).Decode(userEntity)
 

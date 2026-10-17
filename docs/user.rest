@@ -1,8 +1,5 @@
 ### Find by id
-GET http://localhost:8080/getUserById/1 
-
-### Find by email
-GET http://localhost:8080/getUserById/1 
+GET http://localhost:8080/getUserById/6ad33a99a8e7f4c5a98e818d 
 
 ### CREATED  
 
@@ -14,3 +11,6 @@ POST http://localhost:8080/createUser
     "name": "Glêsio Santos da Silva",
     "age": 42
 }
+
+### Find by email
+ GET http://localhost:8080/getUserByEmail/glesioss@gmail.com 
