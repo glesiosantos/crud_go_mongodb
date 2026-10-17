@@ -1,8 +1,6 @@
 package services
 
 import (
-	"fmt"
-
 	"github.com/glesiosantos/crud_go_mongodb/src/config/errorsc"
 	"github.com/glesiosantos/crud_go_mongodb/src/config/logger"
 	"github.com/glesiosantos/crud_go_mongodb/src/model"
@@ -11,9 +9,21 @@ import (
 
 func (ud *userDomainService) CreateUser(
 	userDomain model.UserDomainInterface,
-) *errorsc.RestErr {
+) (model.UserDomainInterface, *errorsc.RestErr) {
 	logger.Info("Init createUser model", zap.String("journey", "createUser"))
+
 	userDomain.EncryptPassword()
-	fmt.Println(userDomain.GetPassword())
-	return nil
+	repository, err := ud.repository.SaveUser(userDomain)
+
+	if err != nil {
+		logger.Error("Init create user model", err, zap.String("journey", "createUser"))
+		return nil, err
+	}
+
+	logger.Info(
+		"CreateUser service executed successfully",
+		zap.String("userId", repository.GetId()),
+		zap.String("journey", "createUser"))
+
+	return repository, nil
 }
