@@ -2,17 +2,13 @@ package repository
 
 import (
 	"context"
-	"encoding/json"
 	"os"
 
 	"github.com/glesiosantos/crud_go_mongodb/src/config/errorsc"
 	"github.com/glesiosantos/crud_go_mongodb/src/config/logger"
 	"github.com/glesiosantos/crud_go_mongodb/src/model"
+	"github.com/glesiosantos/crud_go_mongodb/src/model/repository/entity/converter"
 	"go.mongodb.org/mongo-driver/v2/bson"
-)
-
-const (
-	USER_COLLECTION = "MONGO_DB_USERS_COLLECTION"
 )
 
 func (ur *userRepository) SaveUser(
@@ -23,27 +19,15 @@ func (ur *userRepository) SaveUser(
 	collectionName := os.Getenv(USER_COLLECTION)
 	collection := ur.databaseConnection.Collection(collectionName)
 
-	jsonValue, err := userDomain.GetJsonValue()
+	value := converter.ConverterDomainToEntity(userDomain)
+
+	result, err := collection.InsertOne(context.Background(), value)
+
 	if err != nil {
 		return nil, errorsc.NewInternalError(err.Error())
 	}
 
-	var document bson.M
-	if err := json.Unmarshal([]byte(jsonValue), &document); err != nil {
-		return nil, errorsc.NewInternalError(err.Error())
-	}
+	value.ID = result.InsertedID.(bson.ObjectID)
+	return converter.ConverterEntityToDomain(*value), nil
 
-	result, err := collection.InsertOne(context.Background(), document)
-	if err != nil {
-		return nil, errorsc.NewInternalError(err.Error())
-	}
-
-	id, ok := result.InsertedID.(bson.ObjectID)
-	if !ok {
-		return nil, errorsc.NewInternalError("Tipo inesperado para o ID inserido")
-	}
-
-	userDomain.SetID(id.Hex())
-
-	return userDomain, nil
 }
